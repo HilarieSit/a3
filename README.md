@@ -1,5 +1,5 @@
 # a3: Accessibility for Three.js models
-[![Version](https://img.shields.io/badge/npm-1.0.1-pink)](https://www.npmjs.com/package/a3model)
+[![Version](https://img.shields.io/badge/npm-v1.0.2-pink)](https://www.npmjs.com/package/a3model)
 
 a3 aims to improve the accessibility of Three.js models by offering keyboard navigation for hover and click events, focus indication on meshes/objects, mobile touch events, cursor updates, and roles/descriptions for screen readers.
 
@@ -11,13 +11,18 @@ npm install a3model
 ## Documentation
 ```c 
 import A3 from 'a3model'
+import 'a3model/index.css';
 ```
-Begin by initializing the `A3` object with the body DOMElement and renderer.
+Wrap the canvas element with a div element, as shown below.
+```c 
+<div id='a3canvas'><canvas id="webgl"></canvas></div>
+```
+Initialize the `A3` object with the a3canvas DOMElement and renderer.
 ```c 
 const canvas = document.querySelector('canvas.webgl')
 const renderer = new THREE.WebGLRenderer({canvas: canvas})
-const body = document.querySelector('body')
-const mya3 = new A3(body, renderer);
+const a3canvas = document.getElementbyID('a3canvas')
+const mya3 = new A3(a3canvas, renderer);
 ```
 For every mesh or object that you want to make clickable or hoverable, call `createBox`. It is important that you provide an unique name for each of these meshes.
 ```c
@@ -40,9 +45,13 @@ To hover on a mesh with a keyboard, press 'Tab'. Similarly to the click event, s
 ```c
 mya3.hover(meshes, functions, descriptions, camera)
 ```
-
+### Update Focus Boxes on Camera Change
+For any change to the camera orientation, call `updateBoxes` to update the focus boxes.
+```c
+mya3.updateBoxes(camera)
+```
 ### Render
-Finally, in your animation loop, call `render`.
+In your animation loop, call `render`.
 ```c
 mya3.render(scene, camera)
 ```

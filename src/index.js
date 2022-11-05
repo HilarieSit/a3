@@ -5,18 +5,20 @@ import {
 } from 'three/examples/jsm/renderers/CSS2DRenderer'
 
 class A3{
-    constructor(body, renderer) {
-        this.body = body;
+    constructor(body, renderer, sizes) {
         this.renderer = renderer;
+        this.sizes = sizes;
         this.labelRenderer = new CSS2DRenderer();
-        this.body.appendChild(this.labelRenderer.domElement);
+        this.labelRenderer.setSize(this.sizes.width, this.sizes.height)
+        body.appendChild(this.labelRenderer.domElement);
         this.raycaster = new THREE.Raycaster()
+        
         this.meshList = []
+        this.annotationDivList = []
     }
-    render(scene, camera){
-        this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    render(scene, camera, canvas){
+        this.labelRenderer.domElement.style.top = canvas.offsetTop;
         this.labelRenderer.domElement.style.position = 'absolute';
-        this.labelRenderer.domElement.style.top = '0px';
         this.labelRenderer.domElement.style.pointerEvents = 'none';
         this.labelRenderer.render(scene, camera);
     }
@@ -25,19 +27,31 @@ class A3{
         annotationDiv.className = 'annotationLabelClass'
         annotationDiv.id = mesh.name
         annotationDiv.tabIndex = '0'
-        
-        let boundingBox = new THREE.Box3().setFromObject(mesh)
-        let size = boundingBox.getSize()
-        annotationDiv.style.width = (size.x).toString() + 'px'
-        annotationDiv.style.height = (size.z).toString() + 'px'
-        annotationDiv.tabIndex = '0'
 
         const annotationLabel = new CSS2DObject(annotationDiv)
         annotationLabel.position.set(0, 0, 0)
         mesh.add(annotationLabel)
 
+        this.annotationDivList.push(annotationDiv)
         this.meshList.push(mesh)
         return mesh
+    }
+    updateBoxes(camera){
+        for (let i=0; i<this.annotationDivList.length; i++){
+            let size = new THREE.Vector3()
+            let boundingBox = new THREE.Box3().setFromObject(this.meshList[i])
+            boundingBox.getSize(size)
+
+            var vFOV = camera.fov * Math.PI / 180;
+            var h = 2 * Math.tan( vFOV / 2 ) * camera.position.z;
+            var aspect = this.sizes.width / this.sizes.height;
+            var w = h * aspect;
+            
+            const pixelSizeWidth = this.sizes.width * ((1 / w) * size.x)
+            const pixelSizeHeight = this.sizes.height * ((1 / h) * size.z)
+            this.annotationDivList[i].style.width = (pixelSizeWidth).toString() + 'px'
+            this.annotationDivList[i].style.height = (pixelSizeHeight).toString() + 'px'
+        }
     }
     functWrapper(funct, ...args){
         return function(){ return funct(...args); }
@@ -143,4 +157,4 @@ class A3{
     }
 }
 
-export default A3
+export default A3;

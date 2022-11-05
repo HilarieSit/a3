@@ -1,8 +1,9 @@
 {
   "name": "a3model",
-  "version": "1.0.0",
-  "description": "Accessibility for three.js models",
-  "main": "index.js",
+  "version": "1.0.2",
+  "description": "Accessibility for Three.js models",
+  "main": "src/index.js",
+  "style": "src/index.css",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
