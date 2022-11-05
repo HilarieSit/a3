@@ -6,13 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HilarieSit/a3"
+  },
   "keywords": [
     "accessible",
     "3dmodel",
     "three.js"
   ],
   "author": "hilariesit",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "three": "^0.146.0"
   }

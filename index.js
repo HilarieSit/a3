@@ -143,4 +143,4 @@ class A3{
     }
 }
 
-module.exports = A3;
+export default A3
