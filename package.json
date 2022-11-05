@@ -1,0 +1,19 @@
+{
+  "name": "a3model",
+  "version": "1.0.0",
+  "description": "Accessibility for three.js models",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "accessible",
+    "3dmodel",
+    "three.js"
+  ],
+  "author": "hilariesit",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.146.0"
+  }
+}
