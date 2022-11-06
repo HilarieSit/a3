@@ -5,7 +5,8 @@ import {
 } from 'three/examples/jsm/renderers/CSS2DRenderer'
 
 class A3{
-    constructor(body, renderer, sizes) {
+    constructor(body, canvas, renderer, sizes) {
+        this.canvas = canvas
         this.renderer = renderer;
         this.sizes = sizes;
         this.labelRenderer = new CSS2DRenderer();
@@ -16,8 +17,8 @@ class A3{
         this.meshList = []
         this.annotationDivList = []
     }
-    render(scene, camera, canvas){
-        this.labelRenderer.domElement.style.top = canvas.offsetTop;
+    render(scene, camera){
+        this.labelRenderer.domElement.style.top = this.canvas.offsetTop;
         this.labelRenderer.domElement.style.position = 'absolute';
         this.labelRenderer.domElement.style.pointerEvents = 'none';
         this.labelRenderer.render(scene, camera);
@@ -59,12 +60,12 @@ class A3{
     click(meshes, functs, descriptions, camera){
         document.addEventListener('keydown', (e) => onKeyDown(e, meshes))
         function onKeyDown(e, meshes) {
-            let index = meshes.findIndex(m => m.name === document.activeElement.id)
-            let annotation = document.getElementById(meshes[index].name)
+            let index = meshes.findIndex(m => m === document.activeElement.id)
+            let annotation = document.getElementById(meshes[index])
             annotation.setAttribute('role', 'button')
             for (let i=0; i<meshes.length; i++){
                 if (i != index){
-                    let annotation = document.getElementById(meshes[i].name) 
+                    let annotation = document.getElementById(meshes[i]) 
                     annotation.innerHTML = ''
                 }
             }
@@ -92,10 +93,10 @@ class A3{
             if (intersects.length > 0) {
                 document.body.style.cursor = 'pointer'
                 for (let i=0; i<meshes.length; i++){
-                    let annotation = document.getElementById(meshes[i].name)
+                    let annotation = document.getElementById(meshes[i])
                     annotation.setAttribute('role', 'button')
                     if (click){
-                        if (intersects[0].object.name == meshes[i].name){
+                        if (intersects[0].object.name == meshes[i]){
                             functs[i]()
                             annotation.innerHTML = descriptions[i]
                             annotation.focus()
@@ -113,9 +114,9 @@ class A3{
     hover(meshes, functs, descriptions, camera){
         document.addEventListener('keydown', (e) => onKeyDown(e, meshes))
         function onKeyDown(e, meshes) {
-            let index = meshes.findIndex(m => m.name === document.activeElement.id)
+            let index = meshes.findIndex(m => m === document.activeElement.id)
             if (index>=0){
-                let annotation = document.getElementById(meshes[index+1].name) 
+                let annotation = document.getElementById(meshes[index+1]) 
                 annotation.setAttribute('role', '') 
                 annotation.innerHTML = descriptions[index+1]   
                 if (e.keyCode == 9) { 
@@ -123,7 +124,7 @@ class A3{
                 }
                 for (let i=0; i<meshes.length-1; i++){
                     if (i != index){
-                        let annotation = document.getElementById(meshes[i+1].name) 
+                        let annotation = document.getElementById(meshes[i+1]) 
                         annotation.innerHTML = ''
                     }
                 }
@@ -142,9 +143,9 @@ class A3{
             const intersects = raycaster.intersectObjects(meshList);
             if (intersects.length > 0) {
                 for (let i=0; i<meshes.length; i++){
-                    let annotation = document.getElementById(meshes[i].name)
+                    let annotation = document.getElementById(meshes[i])
                     annotation.setAttribute('role', '')
-                    if (intersects[0].object.name == meshes[i].name){
+                    if (intersects[0].object.name == meshes[i]){
                         functs[i]() 
                         annotation.innerHTML = descriptions[i]
                         annotation.focus()
