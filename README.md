@@ -30,6 +30,7 @@ const mya3 = new A3(canvas, renderer, a3canvas, sizes);
 ```
 For every mesh or object that you want to make clickable or hoverable, call `createBox`. It is important that you provide an unique name for each of these meshes.
 ```c
+mesh.name = 'uniqueName'
 mesh = mya3.createBox(mesh)
 ```
 ### Click Events
@@ -39,13 +40,13 @@ For every click event in your model, identify the mesh name, the function that w
 ```c
 mya3.click(meshes, functions, descriptions, camera)
 ```
-For functions, use the `functWrapper` function to wrap the function and its arguments.
+For each function, use the `functWrapper` function to wrap the function and its arguments.
 ```c
-mya3.functWrapper(funct, ...args)
+function = mya3.functWrapper(funct, ...args)
 ```
 
 ### Hover Events
-To hover on a mesh with a keyboard, press 'Tab'. Similar to the click event, specify the meshes, functions, and descriptions.
+To hover on a mesh with a keyboard, press 'Tab'. Similar to the click event, specify the mesh names, functions called during the hover event, and descriptions for the screen reader.
 ```c
 mya3.hover(meshes, functions, descriptions, camera)
 ```

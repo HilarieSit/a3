@@ -5,13 +5,13 @@ import {
 } from 'three/examples/jsm/renderers/CSS2DRenderer'
 
 class A3{
-    constructor(body, canvas, renderer, sizes) {
+    constructor(canvas, renderer, a3canvas, sizes) {
         this.canvas = canvas
         this.renderer = renderer;
         this.sizes = sizes;
         this.labelRenderer = new CSS2DRenderer();
         this.labelRenderer.setSize(this.sizes.width, this.sizes.height)
-        body.appendChild(this.labelRenderer.domElement);
+        a3canvas.appendChild(this.labelRenderer.domElement);
         this.raycaster = new THREE.Raycaster()
         
         this.meshList = []
