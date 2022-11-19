@@ -1,5 +1,5 @@
 # a3: Accessibility for Three.js models
-[![Version](https://img.shields.io/badge/npm-v1.0.4-pink)](https://www.npmjs.com/package/a3model)
+[![Version](https://img.shields.io/badge/npm-v1.0.5-pink)](https://www.npmjs.com/package/a3model)
 
 a3 aims to improve the accessibility of Three.js models by offering keyboard navigation for hover and click events, focus indication on meshes/objects, mobile touch events, cursor updates, and roles/descriptions for screen readers.
 
@@ -34,12 +34,12 @@ mesh.name = 'uniqueName'
 mesh = mya3.createBox(mesh, role=null)
 ```
 
-<img src="https://github.com/HilarieSit/a3/blob/main/tabexample.gif" width="600" alt="gif demostrating focus of meshes using tab">
+<img src="https://github.com/HilarieSit/a3/blob/master/tabexample.gif" width="600" alt="gif demostrating focus of meshes using tab">
 
 ### Click Events
 To click on a mesh with a keyboard, tab to the mesh and press 'Enter'. Upon hover over with a mouse, the cursor will change from 'default' to 'pointer'. All click events are translated to touch events on mobile devices.
 
-<img src="https://github.com/HilarieSit/a3/blob/main/hoverexample.gif" width="600" alt="gif demostrating cursor change on hover for clickable meshes">
+<img src="https://github.com/HilarieSit/a3/blob/master/hoverexample.gif" width="600" alt="gif demostrating cursor change on hover for clickable meshes">
 
 For every click event in your model, identify the mesh name, the function that will be called during the click event, and a description for the screen reader.
 ```c
