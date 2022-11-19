@@ -16,6 +16,8 @@ class A3{
         
         this.meshList = []
         this.annotationDivList = []
+        this.clickList = []
+        this.hoverList = []
     }
     render(scene, camera){
         this.labelRenderer.domElement.style.top = this.canvas.offsetTop;
@@ -23,11 +25,14 @@ class A3{
         this.labelRenderer.domElement.style.pointerEvents = 'none';
         this.labelRenderer.render(scene, camera);
     }
-    createBox(mesh){
+    createBox(mesh, role=null){
         const annotationDiv = document.createElement('div')
         annotationDiv.className = 'annotationLabelClass'
         annotationDiv.id = mesh.name
         annotationDiv.tabIndex = '0'
+        if (role != null){
+            annotationDiv.setAttribute('role', role)
+        }
 
         const annotationLabel = new CSS2DObject(annotationDiv)
         annotationLabel.position.set(0, 0, 0)
@@ -57,28 +62,40 @@ class A3{
     functWrapper(funct, ...args){
         return function(){ return funct(...args); }
     }
-    click(meshes, functs, descriptions, camera){
-        document.addEventListener('keydown', (e) => onKeyDown(e, meshes))
-        function onKeyDown(e, meshes) {
-            let index = meshes.findIndex(m => m === document.activeElement.id)
-            let annotation = document.getElementById(meshes[index])
-            annotation.setAttribute('role', 'button')
-            for (let i=0; i<meshes.length; i++){
-                if (i != index){
-                    let annotation = document.getElementById(meshes[i]) 
-                    annotation.innerHTML = ''
-                }
+    click(meshname, funct, description){
+        this.clickList.push({'mesh': meshname, 'funct': funct, 'description': description})
+    }
+    hover(meshname, funct, description){
+        this.hoverList.push({'mesh': meshname, 'funct': funct, 'description': description})
+    }
+    renderEffects(camera){
+        document.addEventListener('keydown', (e) => onKeyDown(e, this.clickList, this.hoverList))
+        function onKeyDown(e, clickList, hoverList) {
+            let cIndex = clickList.findIndex(m => m.mesh === document.activeElement.id)
+            let hIndex = hoverList.findIndex(m => m.mesh === document.activeElement.id)
+            if (e.keyCode == 9) {
+                let hoverAnnotation = document.getElementById(hoverList[hIndex+1].mesh)
+                hoverAnnotation.innerHTML = hoverList[hIndex+1].description
+                hoverList[hIndex+1].funct()
             }
             if (e.keyCode == 13) { 
-                annotation.innerHTML = descriptions[index]
-                functs[index]()
+                if (cIndex >= 0){
+                    let clickAnnotation = document.getElementById(clickList[cIndex].mesh)
+                    clickAnnotation.innerHTML = clickList[cIndex].description
+                    setTimeout(function(clickAnnotation){
+                        clickAnnotation.innerHTML = ''
+                    }, 500, clickAnnotation)
+                    clickAnnotation.click()
+                    clickList[cIndex].funct()
+                }
             }   
         }
-        this.renderer.domElement.addEventListener('mousemove', (e) => onClick(e, false, false, meshes, this.raycaster, this.renderer, this.meshList, camera));
-        this.renderer.domElement.addEventListener('click', (e) => onClick(e, true, false, meshes, this.raycaster, this.renderer, this.meshList, camera));
-        this.renderer.domElement.addEventListener('touchstart', (e) => onClick(e, true, true, meshes, this.raycaster, this.renderer, this.meshList, camera));
-        function onClick(e, click, touch, meshes, raycaster, renderer, meshList, camera) {
-            if (touch){
+        this.renderer.domElement.addEventListener('mousemove', (e) => onClick(e, this.clickList, this.hoverList, this.raycaster, this.renderer, this.meshList, camera));
+        this.renderer.domElement.addEventListener('click', (e) => onClick(e, this.clickList, this.hoverList, this.raycaster, this.renderer, this.meshList, camera));
+        this.renderer.domElement.addEventListener('touchstart', (e) => onClick(e, this.clickList, this.hoverList, this.raycaster, this.renderer, this.meshList, camera));
+        function onClick(e, clickList, hoverList, raycaster, renderer, meshList, camera) {
+            console.log(e.type)
+            if (e.type == "touchstart"){
                 e.clientX = e.touches[0].pageX;
                 e.clientY = e.touches[0].pageY;
             }
@@ -92,67 +109,28 @@ class A3{
             const intersects = raycaster.intersectObjects(meshList);
             if (intersects.length > 0) {
                 document.body.style.cursor = 'pointer'
-                for (let i=0; i<meshes.length; i++){
-                    let annotation = document.getElementById(meshes[i])
-                    annotation.setAttribute('role', 'button')
-                    if (click){
-                        if (intersects[0].object.name == meshes[i]){
-                            functs[i]()
-                            annotation.innerHTML = descriptions[i]
-                            annotation.focus()
-            
-                        } else {
-                            annotation.innerHTML = ''
+                for (let i=0; i<clickList.length; i++){
+                    let clickAnnotation = document.getElementById(clickList[i].mesh)
+                    if (e.type == "click"){
+                        if (intersects[0].object.name == clickList[i].mesh){
+                            clickList[i].funct()
+                            clickAnnotation.innerHTML = clickList[i].description
+                            setTimeout(function(clickAnnotation){
+                                clickAnnotation.innerHTML = ''
+                            }, 500, clickAnnotation)
+                            clickAnnotation.focus()
                         }
+                    }
+                let hIndex = hoverList.findIndex(m => m.mesh === intersects[0].object.name)
+                if (hIndex > -1){
+                    let hoverAnnotation = document.getElementById(hoverList[i].mesh)
+                    hoverList[hIndex].funct()
+                    hoverAnnotation.innerHTML = hoverList[hIndex].description
+                    hoverAnnotation.click()
                     }
                 }
             } else {
                 document.body.style.cursor = 'default'
-            }
-        }
-    }
-    hover(meshes, functs, descriptions, camera){
-        document.addEventListener('keydown', (e) => onKeyDown(e, meshes))
-        function onKeyDown(e, meshes) {
-            let index = meshes.findIndex(m => m === document.activeElement.id)
-            if (index>=0){
-                let annotation = document.getElementById(meshes[index+1]) 
-                annotation.setAttribute('role', '') 
-                annotation.innerHTML = descriptions[index+1]   
-                if (e.keyCode == 9) { 
-                    functs[index+1]()
-                }
-                for (let i=0; i<meshes.length-1; i++){
-                    if (i != index){
-                        let annotation = document.getElementById(meshes[i+1]) 
-                        annotation.innerHTML = ''
-                    }
-                }
-            }
-        
-        }
-        this.renderer.domElement.addEventListener('pointermove', (e) => onHover(e, meshes, this.raycaster, this.renderer, this.meshList, camera));
-        function onHover(e, meshes, raycaster, renderer, meshList, camera) {
-            raycaster.setFromCamera(
-                {
-                    x: (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
-                    y: -(e.clientY / renderer.domElement.clientHeight) * 2 + 1,
-                },
-                camera
-            );
-            const intersects = raycaster.intersectObjects(meshList);
-            if (intersects.length > 0) {
-                for (let i=0; i<meshes.length; i++){
-                    let annotation = document.getElementById(meshes[i])
-                    annotation.setAttribute('role', '')
-                    if (intersects[0].object.name == meshes[i]){
-                        functs[i]() 
-                        annotation.innerHTML = descriptions[i]
-                        annotation.focus()
-                    } else {
-                        annotation.innerHTML = ''
-                    }
-                }
             }
         }
     }

@@ -34,17 +34,18 @@ const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 var mesh = new THREE.Mesh(geometry, material)
 mesh.name = "mesh"
-mesh = mya3.createBox(mesh)
+mesh = mya3.createBox(mesh, "button")
 scene.add(mesh)
 
 // A3 Click 
 let funct = mya3.functWrapper(changeColor, mesh)
-mya3.click([mesh.name], [funct], ['color change on click'], camera)
+mya3.click(mesh.name, funct, 'mesh color changed on click', camera)
 
 function changeColor(child){
     child.material.color.setHex(Math.random() * 0xffffff);
 }
 
+mya3.renderEffects(camera)
 function animate(){
     requestAnimationFrame(animate);
     renderer.render(scene, camera);

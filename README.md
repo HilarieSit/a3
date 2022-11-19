@@ -28,27 +28,32 @@ const sizes = {
 }
 const mya3 = new A3(canvas, renderer, a3canvas, sizes);
 ```
-For every mesh or object that you want to make clickable or hoverable, call `createBox`. It is important that you provide an unique name for each of these meshes.
+For every mesh or object that you want to make focusable, call `createBox`. It is important that you provide an unique name for each of these meshes. You can specify a role for the mesh, such as "button".
 ```c
 mesh.name = 'uniqueName'
-mesh = mya3.createBox(mesh)
+mesh = mya3.createBox(mesh, role=null)
 ```
-### Click Events
-Meshes with click events will be given the role of a button. To click on a mesh with a keyboard, tab to the mesh and press 'Enter'. Upon hover over with a mouse, the cursor will change from 'default' to 'pointer'. All click events are translated to touch events on mobile devices.
 
-For every click event in your model, identify the mesh name, the function that will be called during the click event, and a description for the screen reader. Put these (in order) in three seperate lists: meshes, functions, descriptions, respectively.
+<img src="https://github.com/HilarieSit/a3/blob/main/tabexample.gif" width="600" alt="gif demostrating focus of meshes using tab">
+
+### Click Events
+To click on a mesh with a keyboard, tab to the mesh and press 'Enter'. Upon hover over with a mouse, the cursor will change from 'default' to 'pointer'. All click events are translated to touch events on mobile devices.
+
+<img src="https://github.com/HilarieSit/a3/blob/main/hoverexample.gif" width="600" alt="gif demostrating cursor change on hover for clickable meshes">
+
+For every click event in your model, identify the mesh name, the function that will be called during the click event, and a description for the screen reader.
 ```c
-mya3.click(meshes, functions, descriptions, camera)
+mya3.click(meshname, function, description)
 ```
-For each function, use the `functWrapper` function to wrap the function and its arguments.
+For the function, use the `functWrapper` function to wrap the function and its arguments.
 ```c
 function = mya3.functWrapper(funct, ...args)
 ```
 
 ### Hover Events
-To hover on a mesh with a keyboard, press 'Tab'. Similar to the click event, specify the mesh names, functions called during the hover event, and descriptions for the screen reader.
+To hover on a mesh with a keyboard, press 'Tab'. Similar to the click event, specify the mesh name, function called during the hover event, and description for the screen reader.
 ```c
-mya3.hover(meshes, functions, descriptions, camera)
+mya3.hover(meshname, function, description)
 ```
 ### Update Focus Boxes on Camera Change
 For any change to the camera orientation, call `updateBoxes` to update the focus boxes.
@@ -56,6 +61,10 @@ For any change to the camera orientation, call `updateBoxes` to update the focus
 mya3.updateBoxes(camera)
 ```
 ### Render
+If you specified any click or hover events, call `renderEffects`.
+```c
+mya3.renderEffects(camera)
+```
 In your animation loop, call `render`.
 ```c
 mya3.render(scene, camera)
