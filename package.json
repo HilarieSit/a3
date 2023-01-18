@@ -1,6 +1,6 @@
 {
   "name": "a3model",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Accessibility for Three.js models",
   "main": "src/index.js",
   "style": "src/index.css",

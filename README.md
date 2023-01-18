@@ -1,5 +1,5 @@
 # a3: Accessibility for Three.js models
-[![Version](https://img.shields.io/badge/npm-v1.0.5-pink)](https://www.npmjs.com/package/a3model)
+[![Version](https://img.shields.io/badge/npm-v1.0.6-pink)](https://www.npmjs.com/package/a3model)
 
 a3 aims to improve the accessibility of Three.js models by offering keyboard navigation for hover and click events, focus indication on meshes/objects, mobile touch events, cursor updates, and roles/descriptions for screen readers.
 

@@ -101,8 +101,8 @@ class A3{
             }
             raycaster.setFromCamera(
                 {
-                    x: (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
-                    y: -(e.clientY / renderer.domElement.clientHeight) * 2 + 1,
+                    x: (e.offsetX / renderer.domElement.clientWidth) * 2 - 1,
+                    y: -(e.offsetY / renderer.domElement.clientHeight) * 2 + 1,
                 },
                 camera
             );
