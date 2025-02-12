@@ -94,7 +94,6 @@ class A3{
         this.renderer.domElement.addEventListener('click', (e) => onClick(e, this.clickList, this.hoverList, this.raycaster, this.renderer, this.meshList, camera));
         this.renderer.domElement.addEventListener('touchstart', (e) => onClick(e, this.clickList, this.hoverList, this.raycaster, this.renderer, this.meshList, camera));
         function onClick(e, clickList, hoverList, raycaster, renderer, meshList, camera) {
-            console.log(e.type)
             if (e.type == "touchstart"){
                 e.clientX = e.touches[0].pageX;
                 e.clientY = e.touches[0].pageY;

@@ -3,7 +3,7 @@ import A3 from 'a3model'
 import 'a3model/src/index.css'
 
 // Canvas
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('canvas#webgl')
 
 // Sizes
 const sizes = {
