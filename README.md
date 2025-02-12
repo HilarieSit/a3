@@ -69,3 +69,10 @@ In your animation loop, call `render`.
 ```c
 mya3.render(scene, camera)
 ```
+
+### Remove Mesh
+When you remove a mesh from the scene, remove the corresponding DOM element.
+```c
+scene.remove(mesh)
+mya3.remove(mesh)
+```
