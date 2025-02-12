@@ -18,6 +18,7 @@ class A3{
         this.annotationDivList = []
         this.clickList = []
         this.hoverList = []
+        this.disposed = false
     }
     render(scene, camera){
         this.labelRenderer.domElement.style.top = this.canvas.offsetTop;
@@ -64,6 +65,7 @@ class A3{
     }
     click(meshname, funct, description){
         this.clickList.push({'mesh': meshname, 'funct': funct, 'description': description})
+        // this.hoverList.push({'mesh': meshname, 'funct': funct, 'description': description})
     }
     hover(meshname, funct, description){
         this.hoverList.push({'mesh': meshname, 'funct': funct, 'description': description})
@@ -73,10 +75,13 @@ class A3{
         function onKeyDown(e, clickList, hoverList) {
             let cIndex = clickList.findIndex(m => m.mesh === document.activeElement.id)
             let hIndex = hoverList.findIndex(m => m.mesh === document.activeElement.id)
+            console.log(hoverList)
             if (e.keyCode == 9) {
-                let hoverAnnotation = document.getElementById(hoverList[hIndex+1].mesh)
-                hoverAnnotation.innerHTML = hoverList[hIndex+1].description
-                hoverList[hIndex+1].funct()
+                if (hIndex >= 0){
+                    let hoverAnnotation = document.getElementById(hoverList[hIndex+1].mesh)
+                    hoverAnnotation.innerHTML = hoverList[hIndex+1].description
+                    hoverList[hIndex+1].funct()
+                }
             }
             if (e.keyCode == 13) { 
                 if (cIndex >= 0){
@@ -130,6 +135,20 @@ class A3{
                 }
             } else {
                 document.body.style.cursor = 'default'
+            }
+        }
+    }
+
+    dispose(){
+        this.labelRenderer.dispose()
+    }
+
+    remove(mesh){
+        document.getElementById(mesh.name).remove();
+        for (let i = 0; i < this.annotationDivList.length; i++) {
+            if (this.annotationDivList[i].id === mesh.name) {
+                this.meshList.splice(i, 1);
+                this.annotationDivList.splice(i, 1);
             }
         }
     }
